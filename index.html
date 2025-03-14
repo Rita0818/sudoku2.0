@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数独游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .sudoku-board {
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .grid {
+            display: grid;
+            background-color: #999;
+            padding: 2px;
+            border: 2px solid #999;
+            gap: 0;
+        }
+
+        .grid-6x6 {
+            grid-template-columns: repeat(6, 50px);
+            grid-template-rows: repeat(6, 50px);
+            gap: 2px 2px;
+        }
+
+        .grid-9x9 {
+            grid-template-columns: repeat(9, 50px);
+            grid-template-rows: repeat(9, 50px);
+            gap: 2px 2px;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            font-size: 20px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* 为9x9模式添加3x3格子边框 */
+        .grid-9x9 .cell:nth-child(9n+1),
+        .grid-9x9 .cell:nth-child(9n+2),
+        .grid-9x9 .cell:nth-child(9n+3),
+        .grid-9x9 .cell:nth-child(9n+4),
+        .grid-9x9 .cell:nth-child(9n+5),
+        .grid-9x9 .cell:nth-child(9n+6),
+        .grid-9x9 .cell:nth-child(9n+7),
+        .grid-9x9 .cell:nth-child(9n+8),
+        .grid-9x9 .cell:nth-child(9n+9) {
+            border: 1px solid #ccc;
+        }
+
+        .grid-9x9 .cell:nth-child(3n) {
+            border-right: 2px solid #666;
+        }
+
+        .grid-9x9 .cell:nth-child(n+19):nth-child(-n+27),
+        .grid-9x9 .cell:nth-child(n+46):nth-child(-n+54) {
+            border-bottom: 2px solid #666;
+        }
+
+        /* 为6x6模式添加3x3格子边框 */
+        .grid-6x6 .cell:nth-child(6n+1),
+        .grid-6x6 .cell:nth-child(6n+2),
+        .grid-6x6 .cell:nth-child(6n+3),
+        .grid-6x6 .cell:nth-child(6n+4),
+        .grid-6x6 .cell:nth-child(6n+5),
+        .grid-6x6 .cell:nth-child(6n+6) {
+            border: 1px solid #ccc;
+        }
+
+        .grid-6x6 .cell:nth-child(3n) {
+            border-right: 2px solid #666;
+        }
+
+        .grid-6x6 .cell:nth-child(n+13):nth-child(-n+18),
+        .grid-6x6 .cell:nth-child(n+31):nth-child(-n+36) {
+            border-bottom: 2px solid #666;
+        }
+
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .cell input:focus {
+            outline: 2px solid #4CAF50;
+        }
+
+        .fixed {
+            background-color: #f8f8f8;
+            font-weight: bold;
+        }
+
+        .cell input:not([readonly]) {
+            color: red;
+        }
+
+        .incorrect {
+            position: relative;
+        }
+
+        .incorrect::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="switchSize('6x6')">6x6模式</button>
+        <button onclick="switchSize('9x9')">9x9模式</button>
+        <button onclick="newGame()">新游戏</button>
+        <button onclick="toggleSolution()">显示/隐藏答案</button>
+        <button onclick="checkSolution()">检查答案</button>
+    </div>
+    <div class="sudoku-board">
+        <div id="grid" class="grid grid-9x9"></div>
+    </div>
+    <script src="sudoku.js"></script>
+</body>
+</html>
